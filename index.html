@@ -1,0 +1,1240 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Template Chat WA - RaeZhy &amp; MHJ Toko</title>
+
+  <!-- PWA: agar bisa dipasang -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#cf2f8a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Template WA">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <style>
+    /* ========== Tema (pink-ungu, mengikuti maskot RaeZhy) ========== */
+    :root {
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+
+      --bg: #fdeef7;
+      --surface: #fffafd;
+      --text: #3a1a35;
+      --muted: #85587c;
+      --line: #f0cde3;
+      --accent: #cf2f8a;
+      --accent2: #7b4dc9;
+      --grad: linear-gradient(135deg, #d63c93, #7b4dc9);
+      --accent-text: #fff;
+      --bubble: #ffd9ec;
+      --bubble-text: #4a1a3d;
+      --chip: #f8d8ec;
+      --danger: #c0264f;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #1b0d24;
+        --surface: #2a1637;
+        --text: #fbe8f5;
+        --muted: #c9a3c2;
+        --line: #4a2a5c;
+        --accent: #d63c93;
+        --accent2: #9b6df0;
+        --grad: linear-gradient(135deg, #d63c93, #7b4dc9);
+        --bubble: #5a2a5e;
+        --bubble-text: #fff0fa;
+        --chip: #3a2147;
+        --danger: #ff7b9c;
+      }
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #1b0d24;
+      --surface: #2a1637;
+      --text: #fbe8f5;
+      --muted: #c9a3c2;
+      --line: #4a2a5c;
+      --accent: #d63c93;
+      --accent2: #9b6df0;
+      --grad: linear-gradient(135deg, #d63c93, #7b4dc9);
+      --bubble: #5a2a5e;
+      --bubble-text: #fff0fa;
+      --chip: #3a2147;
+      --danger: #ff7b9c;
+    }
+
+    /* ========== Dasar ========== */
+    html {
+      scroll-padding-top: env(safe-area-inset-top, 0px);
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg) radial-gradient(circle at 100% 0, color-mix(in srgb, var(--accent2) 18%, transparent), transparent 55%) no-repeat;
+      background-attachment: fixed;
+      color: var(--text);
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 16px 16px 110px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 4px 0 2px;
+    }
+
+    .brand img {
+      width: 56px;
+      height: 56px;
+      flex: none;
+      filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--accent) 45%, transparent));
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0;
+      letter-spacing: -.01em;
+      background: var(--grad);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .sub {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* ========== Menu utama ========== */
+    .menus {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      padding: 4px;
+      margin: 8px 0 12px;
+      background: var(--chip);
+      border-radius: 14px;
+    }
+
+    .menu-tab {
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      padding: 10px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .menu-tab.on {
+      background: var(--grad);
+      color: var(--accent-text);
+    }
+
+    /* ========== Form ========== */
+    input,
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      font: inherit;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    input:focus-visible,
+    textarea:focus-visible,
+    button:focus-visible,
+    a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .row + .row {
+      margin-top: 8px;
+    }
+
+    /* ========== Filter kategori ========== */
+    .chips {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px 0 2px;
+    }
+
+    .chip {
+      flex: none;
+      border: 0;
+      background: var(--chip);
+      color: var(--text);
+      padding: 7px 14px;
+      border-radius: 99px;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .chip.on {
+      background: var(--grad);
+      color: var(--accent-text);
+    }
+
+    /* ========== Kartu templat ========== */
+    .card {
+      margin-top: 18px;
+    }
+
+    .head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin: 0 4px 6px;
+    }
+
+    .head h3 {
+      flex: 1;
+      margin: 0;
+      font-size: 15px;
+    }
+
+    .star {
+      border: 0;
+      background: none;
+      padding: 0 2px;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--muted);
+    }
+
+    .star.on {
+      color: #e0a800;
+    }
+
+    .tag {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .bubble {
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0 0 0 24px;
+      background: var(--bubble);
+      color: var(--bubble-text);
+      border-radius: 18px 18px 4px 18px;
+      border: 1px solid color-mix(in srgb, var(--accent) 18%, transparent);
+      padding: 10px 14px;
+      font-size: 15px;
+    }
+
+    .btns {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+
+    .empty {
+      color: var(--muted);
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 28px;
+    }
+
+    .tools button {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ========== Tombol ========== */
+    button,
+    .btn {
+      font: inherit;
+      font-size: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px 12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .pri {
+      background: var(--grad);
+      color: var(--accent-text);
+      border-color: transparent;
+      font-weight: 600;
+    }
+
+    .danger {
+      color: var(--danger);
+    }
+
+    .fab {
+      position: fixed;
+      right: 16px;
+      bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+      border-radius: 99px;
+      padding: 14px 20px;
+      font-weight: 600;
+      box-shadow: 0 4px 16px color-mix(in srgb, var(--accent) 50%, transparent);
+    }
+
+    /* ========== Modal ========== */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .sheet {
+      background: var(--surface);
+      width: 100%;
+      max-width: 640px;
+      border-radius: 20px 20px 0 0;
+      padding: 16px;
+      padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+      display: grid;
+      gap: 10px;
+    }
+
+    .sheet h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .sheet label {
+      font-size: 14px;
+      color: var(--muted);
+      display: grid;
+      gap: 4px;
+    }
+
+    /* ========== Toast ========== */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(84px + env(safe-area-inset-bottom, 0px));
+      transform: translateX(-50%);
+      background: var(--text);
+      color: var(--bg);
+      padding: 10px 16px;
+      border-radius: 99px;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <img src="logo.png" alt="Maskot RaeZhy" width="56" height="56">
+      <h1>Template Chat WA</h1>
+    </div>
+
+    <div class="menus" id="menus" role="tablist" aria-label="Pilih menu templat">
+      <button class="menu-tab" role="tab" data-menu="raezhy">RaeZhy</button>
+      <button class="menu-tab" role="tab" data-menu="mhj">MHJ Toko</button>
+    </div>
+
+    <p class="sub" id="sub"></p>
+
+    <div class="row">
+      <input id="q" type="search" placeholder="Cari templat" aria-label="Cari templat">
+      <input id="nama" type="text" placeholder="Nama penerima" aria-label="Nama penerima">
+    </div>
+    <div class="row">
+      <input id="produk" type="text" placeholder="Produk/paket" aria-label="Produk atau paket">
+      <input id="nominal" type="text" inputmode="numeric" placeholder="Nominal, mis. 150000" aria-label="Nominal">
+    </div>
+
+    <div class="chips" id="chips"></div>
+    <div id="list"></div>
+
+    <div class="tools">
+      <button id="btn-export">Cadangkan</button>
+      <button id="btn-import">Impor cadangan</button>
+      <button id="btn-restore">Pulihkan bawaan</button>
+      <button id="btn-install" hidden>Pasang aplikasi</button>
+      <input id="import-file" type="file" accept=".json,application/json" hidden>
+    </div>
+  </div>
+
+  <button class="btn pri fab" id="add">+ Templat baru</button>
+
+  <!-- Form tambah / ubah templat -->
+  <div class="modal" id="modal">
+    <div class="sheet">
+      <h2 id="mtitle">Templat baru</h2>
+
+      <label>Judul
+        <input id="f-title" maxlength="60">
+      </label>
+
+      <label>Kategori
+        <input id="f-cat" maxlength="20" list="cats" placeholder="Contoh: Jualan">
+      </label>
+      <datalist id="cats"></datalist>
+
+      <label>Isi pesan (variabel: {nama}, {produk}, {nominal})
+        <textarea id="f-text" rows="6"></textarea>
+      </label>
+
+      <div class="btns">
+        <button id="cancel">Batal</button>
+        <button class="pri" id="save">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ========== Data bawaan ========== */
+    const DEFAULTS_RAEZHY = [
+      {
+        id: 'r1',
+        title: 'Salam pembuka pelanggan',
+        cat: 'Pelayanan',
+        text: `Halo {nama} 👋
+Terima kasih sudah menghubungi RaeZhy.
+Ada yang bisa kami bantu? Silakan sampaikan kebutuhan atau pertanyaan Kakak ya 😊`,
+      },
+      {
+        id: 'r2',
+        title: 'Perkenalan RaeZhy Kasir Toko Pro',
+        cat: 'Promosi',
+        text: `Halo {nama} 👋
+Kenalkan, RaeZhy Kasir Toko Pro — aplikasi kasir modern untuk membantu mengelola warung, toko, dan UMKM.
+
+Fitur unggulan:
+✅ Kelola barang dan stok
+✅ Catat transaksi dan riwayat penjualan
+✅ Pantau laporan melalui dashboard
+✅ Kelola pelanggan dan piutang
+✅ Pembayaran tunai, QRIS, dan transfer
+✅ Cetak struk langsung ke printer thermal tanpa aplikasi tambahan
+✅ Dapat digunakan secara offline
+
+Jika Kakak ingin melihat detail fitur dan paket aktivasi, silakan chat kami ya.`,
+      },
+      {
+        id: 'r3',
+        title: 'Perkenalan RaeZhy Antrian Pro',
+        cat: 'Promosi',
+        text: `Halo {nama} 👋
+RaeZhy Antrian Pro membantu usaha mengatur nomor antrean pelanggan dengan lebih rapi.
+
+Cocok untuk usaha atau layanan yang membutuhkan sistem antrean. Tersedia pilihan penggunaan offline dan online.
+
+Hubungi kami jika ingin mengetahui fitur dan cara pemasangannya 😊`,
+      },
+      {
+        id: 'r4',
+        title: 'Menjawab pertanyaan harga',
+        cat: 'Penjualan',
+        text: `Baik Kak {nama}, terima kasih sudah tertarik dengan produk RaeZhy 😊
+Untuk informasi harga dan paket aktivasi, kami akan bantu jelaskan pilihan yang tersedia.
+
+Produk yang Kakak minati: {produk}`,
+      },
+      {
+        id: 'r5',
+        title: 'Mengirim daftar fitur',
+        cat: 'Penjualan',
+        text: `Halo Kak {nama} 😊
+Berikut fitur RaeZhy Kasir Toko Pro:
+
+• Manajemen barang dan stok
+• Transaksi serta riwayat penjualan
+• Dashboard analitik
+• Data pelanggan dan piutang
+• Pembayaran tunai, QRIS, dan transfer
+• Cetak struk langsung ke printer thermal tanpa aplikasi tambahan
+• Mode offline
+
+Silakan sampaikan jika ada fitur yang ingin Kakak tanyakan.`,
+      },
+      {
+        id: 'r6',
+        title: 'Menawarkan demo aplikasi',
+        cat: 'Penjualan',
+        text: `Halo {nama}, apakah Kakak ingin melihat gambaran penggunaan RaeZhy sebelum membeli?
+Kami bisa membantu menjelaskan alur penggunaan dan fitur-fitur utamanya agar Kakak lebih yakin memilih aplikasi yang sesuai 😊`,
+      },
+      {
+        id: 'r7',
+        title: 'Konfirmasi pesanan aplikasi',
+        cat: 'Pesanan',
+        text: `Halo Kak {nama} 👋
+Pesanan RaeZhy sudah kami terima.
+
+Produk: {produk}
+Paket: ...
+Nama usaha: ...
+
+Mohon periksa kembali detail pesanan di atas. Jika sudah benar, kami lanjutkan ke proses pembayaran dan aktivasi. Terima kasih 🙏`,
+      },
+      {
+        id: 'r8',
+        title: 'Instruksi pembayaran',
+        cat: 'Pesanan',
+        text: `Halo Kak {nama} 😊
+Berikut detail pembayaran pesanan RaeZhy:
+
+Produk/Paket: {produk}
+Nominal: {nominal}
+Pembayaran dapat dilakukan melalui:
+• SeaBank: 901751847503
+• DANA: 081347094909
+Atas nama: M. Taufik
+
+Setelah melakukan pembayaran, silakan kirim bukti transfer ke chat ini agar kami dapat memproses pesanan Kakak. Terima kasih 🙏`,
+      },
+      {
+        id: 'r9',
+        title: 'Pembayaran diterima',
+        cat: 'Pesanan',
+        text: `Terima kasih Kak {nama} 🙏
+Pembayaran sudah kami terima.
+Pesanan RaeZhy akan kami proses untuk tahap aktivasi/pemasangan.
+Kami akan menghubungi Kakak kembali jika prosesnya sudah selesai.`,
+      },
+      {
+        id: 'r10',
+        title: 'Aplikasi siap digunakan',
+        cat: 'Pesanan',
+        text: `Halo Kak {nama} 🎉
+Aplikasi RaeZhy pesanan Kakak sudah siap digunakan.
+
+Produk: {produk}
+Informasi aktivasi: ...
+Panduan pemasangan/penggunaan: ...
+
+Silakan ikuti panduan yang kami berikan. Jika mengalami kendala, langsung hubungi kami melalui chat ini ya. Terima kasih telah memilih RaeZhy!`,
+      },
+      {
+        id: 'r11',
+        title: 'Panduan pemasangan',
+        cat: 'Bantuan',
+        text: `Halo Kak {nama} 😊
+Untuk pemasangan RaeZhy, silakan ikuti panduan berikut:
+
+1. ...
+2. ...
+3. ...
+
+Jika ada langkah yang membingungkan, kirimkan tangkapan layar kendalanya agar kami bisa bantu arahkan.`,
+      },
+      {
+        id: 'r12',
+        title: 'Menanggapi kendala pelanggan',
+        cat: 'Bantuan',
+        text: `Halo Kak {nama}, mohon maaf atas kendala yang dialami 🙏
+Kami siap membantu.
+
+Boleh kirimkan informasi berikut?
+• Produk yang digunakan: ...
+• Kendala yang muncul: ...
+• Sejak kapan terjadi: ...
+• Foto/screenshot pesan error (jika ada)
+
+Kami akan bantu periksa dan arahkan langkah selanjutnya.`,
+      },
+      {
+        id: 'r13',
+        title: 'Menanyakan detail request fitur',
+        cat: 'Bantuan',
+        text: `Terima kasih atas masukannya, Kak {nama} 🙏
+Agar kami memahami kebutuhan Kakak, boleh jelaskan:
+
+• Fitur yang diinginkan: ...
+• Cara kerja yang diharapkan: ...
+• Alasan/kebutuhan fitur tersebut: ...
+
+Kami akan meninjau usulan tersebut. Request fitur mengikuti batasan dan ketentuan pengembangan RaeZhy.`,
+      },
+      {
+        id: 'r14',
+        title: 'Update proses request fitur',
+        cat: 'Bantuan',
+        text: `Halo Kak {nama}, terima kasih sudah menunggu 😊
+Usulan fitur yang Kakak sampaikan sedang kami tinjau.
+Jika sudah ada keputusan atau perkembangan, kami akan mengabari Kakak melalui WhatsApp ini.`,
+      },
+      {
+        id: 'r15',
+        title: 'Meminta ulasan pelanggan',
+        cat: 'Tindak lanjut',
+        text: `Halo Kak {nama} 😊
+Bagaimana pengalaman Kakak menggunakan aplikasi RaeZhy sejauh ini?
+Kami sangat menghargai masukan, saran, maupun kritik dari Kakak agar layanan kami semakin baik. Terima kasih sudah mempercayai RaeZhy 🙏`,
+      },
+      {
+        id: 'r16',
+        title: 'Follow up calon pelanggan',
+        cat: 'Tindak lanjut',
+        text: `Halo Kak {nama}, izin menindaklanjuti informasi RaeZhy yang sebelumnya kami kirimkan 😊
+Apakah Kakak masih ingin mengetahui lebih lanjut atau ada hal yang ingin ditanyakan? Kami siap membantu.`,
+      },
+      {
+        id: 'r17',
+        title: 'Ucapan terima kasih',
+        cat: 'Pelayanan',
+        text: `Terima kasih telah memilih dan mempercayai RaeZhy, Kak {nama} 🙏
+Dukungan Kakak sangat berarti bagi kami. Semoga RaeZhy membantu kegiatan usaha Kakak menjadi lebih mudah dan tertata. Salam sukses!`,
+      },
+      {
+        id: 'r18',
+        title: 'Pesan di luar jam layanan',
+        cat: 'Pelayanan',
+        text: `Halo Kak {nama}, terima kasih sudah menghubungi RaeZhy 🙏
+Pesan Kakak sudah kami terima. Kami akan membalas kembali pada jam layanan berikutnya. Terima kasih atas pengertiannya.`,
+      },
+      {
+        id: 'r19',
+        title: 'Pengingat pembayaran',
+        cat: 'Pesanan',
+        text: `Halo Kak {nama} 😊
+Izin mengingatkan, pesanan RaeZhy Kakak ({produk}) masih menunggu pembayaran sebesar {nominal}.
+
+Jika sudah transfer, mohon kirim bukti pembayarannya ke chat ini ya. Jika masih ada yang ingin ditanyakan, kami siap membantu. Terima kasih 🙏`,
+      },
+      {
+        id: 'r20',
+        title: 'Bukti transfer diterima, sedang dicek',
+        cat: 'Pesanan',
+        text: `Terima kasih Kak {nama} 🙏
+Bukti pembayaran sudah kami terima dan sedang kami cek.
+Mohon ditunggu sebentar. Begitu pembayaran terkonfirmasi, kami langsung lanjutkan ke proses aktivasi/pemasangan.`,
+      },
+      {
+        id: 'r21',
+        title: 'Perpanjangan atau pindah perangkat',
+        cat: 'Bantuan',
+        text: `Halo Kak {nama} 😊
+Baik, kami bantu untuk kebutuhan perpanjangan/pemindahan perangkat RaeZhy.
+
+Mohon informasikan:
+• Produk yang digunakan: {produk}
+• Nama usaha: ...
+• Kebutuhan: perpanjangan / pindah perangkat
+• Perangkat lama dan baru (jika pindah): ...
+
+Setelah data kami terima, kami akan arahkan langkah selanjutnya.`,
+      },
+      {
+        id: 'r22',
+        title: 'Panduan printer thermal',
+        cat: 'Bantuan',
+        text: `Halo Kak {nama} 😊
+Untuk mencetak struk ke printer thermal di RaeZhy Kasir Toko Pro, silakan ikuti langkah berikut:
+
+1. Nyalakan printer thermal dan pastikan kertas sudah terpasang.
+2. ...
+3. ...
+4. Coba cetak satu transaksi untuk memastikan struk keluar dengan benar.
+
+Jika struk belum keluar, kirimkan tipe printer dan tangkapan layar kendalanya agar kami bisa bantu arahkan.`,
+      },
+      {
+        id: 'r23',
+        title: 'Perangkat yang didukung',
+        cat: 'Penjualan',
+        text: `Halo Kak {nama} 😊
+Perangkat yang didukung RaeZhy:
+
+• ...
+• ...
+
+Jika Kakak ragu perangkatnya cocok atau tidak, sebutkan tipe perangkatnya dan kami bantu cek ya.`,
+      },
+      {
+        id: 'r24',
+        title: 'Fitur belum tersedia',
+        cat: 'Bantuan',
+        text: `Terima kasih atas usulannya, Kak {nama} 🙏
+Untuk saat ini fitur tersebut belum tersedia di RaeZhy, dan penambahannya belum bisa kami pastikan karena request fitur mengikuti batasan dan ketentuan pengembangan.
+
+Usulan Kakak tetap kami catat sebagai bahan pertimbangan. Jika ada perkembangan, kami akan kabari melalui chat ini.`,
+      },
+      {
+        id: 'r25',
+        title: 'Info promo atau paket',
+        cat: 'Promosi',
+        text: `Halo {nama} 👋
+Ada info promo dari RaeZhy 🎉
+
+Produk: {produk}
+Promo/paket: ...
+Periode: ...
+Syarat dan ketentuan: ...
+
+Tertarik? Silakan balas chat ini dan kami bantu prosesnya.`,
+      },
+      {
+        id: 'r26',
+        title: 'Calon pelanggan belum cocok',
+        cat: 'Tindak lanjut',
+        text: `Baik Kak {nama}, terima kasih sudah meluangkan waktu untuk melihat RaeZhy 🙏
+Kami mengerti jika saat ini belum sesuai dengan kebutuhan Kakak.
+
+Jika suatu saat Kakak membutuhkan aplikasi kasir atau antrean, silakan hubungi kami kembali. Semoga usaha Kakak makin lancar!`,
+      },
+      {
+        id: 'r27',
+        title: 'Info update aplikasi',
+        cat: 'Pelayanan',
+        text: `Halo Kak {nama} 👋
+Ada pembaruan untuk aplikasi RaeZhy.
+
+Yang baru:
+• ...
+• ...
+
+Cara memperbarui: ...
+
+Jika ada kendala setelah pembaruan, kabari kami melalui chat ini ya. Terima kasih 🙏`,
+      },
+    ];
+
+const DEFAULTS_MHJ = [
+      {
+        id: 'h1',
+        title: 'Harga satu barang',
+        cat: 'Jawab harga',
+        text: `Halo Kak {nama} 😊
+Untuk {produk}, harganya {nominal}.
+Barang tersedia di MHJ Toko. Stok bisa berubah sewaktu-waktu, jadi jika ingin dipesan, sebutkan jumlahnya ya.`,
+      },
+      {
+        id: 'h2',
+        title: 'Harga per satuan, lusin, atau box',
+        cat: 'Jawab harga',
+        text: `Halo Kak {nama} 😊
+Harga {produk}:
+
+• Per satuan: ...
+• Per lusin: ...
+• Per box: ...
+
+Silakan pilih sesuai kebutuhan Kakak. Mau berapa banyak?`,
+      },
+      {
+        id: 'h3',
+        title: 'Daftar harga beberapa barang',
+        cat: 'Jawab harga',
+        text: `Halo Kak {nama} 😊
+Berikut harga barang yang Kakak tanyakan:
+
+• ...: Rp...
+• ...: Rp...
+• ...: Rp...
+
+Harga dapat berubah sewaktu-waktu. Jika ingin memesan, sebutkan barang dan jumlahnya ya.`,
+      },
+      {
+        id: 'h4',
+        title: 'Harga perlu dicek dulu',
+        cat: 'Jawab harga',
+        text: `Halo Kak {nama}, terima kasih sudah menanyakan {produk} 🙏
+Harga barang ini perlu kami cek dulu agar tepat. Mohon ditunggu sebentar, nanti kami kabari kembali.`,
+      },
+      {
+        id: 'h5',
+        title: 'Harga dan ongkos kirim',
+        cat: 'Jawab harga',
+        text: `Halo Kak {nama} 😊
+Harga {produk} adalah {nominal}, belum termasuk ongkos kirim.
+Jika ingin diantar, mohon info alamat pengiriman agar kami hitung biayanya. Bisa juga diambil langsung di toko.`,
+      },
+      {
+        id: 'h6',
+        title: 'Barang belum ada di daftar',
+        cat: 'Jawab harga',
+        text: `Halo Kak {nama} 😊
+Terima kasih sudah menanyakan {produk}. Barang ini belum ada di daftar kami, jadi harganya belum bisa kami sampaikan sekarang.
+Kami cek dulu ketersediaannya dan akan kabari Kakak jika sudah ada.`,
+      },
+      {
+        id: 'h7',
+        title: 'Beli dalam jumlah banyak',
+        cat: 'Jumlah dan tawar',
+        text: `Halo Kak {nama} 😊
+Untuk pembelian {produk} dalam jumlah banyak, mohon info jumlah yang dibutuhkan: ...
+Kami hitung ulang total dan sampaikan penawarannya. Terima kasih 🙏`,
+      },
+      {
+        id: 'h8',
+        title: 'Pelanggan menawar harga',
+        cat: 'Jumlah dan tawar',
+        text: `Terima kasih Kak {nama} 🙏
+Untuk {produk}, harga saat ini {nominal}.
+Jika Kakak membeli dalam jumlah lebih banyak atau bersama barang lain, sebutkan kebutuhannya dan kami coba hitungkan penawaran terbaik.`,
+      },
+      {
+        id: 'h9',
+        title: 'Harga tergantung luas pekerjaan',
+        cat: 'Jumlah dan tawar',
+        text: `Halo Kak {nama} 😊
+Total biaya bahan tergantung luas/volume pekerjaan. Mohon info:
+
+• Jenis pekerjaan: ...
+• Luas/volume (m² / m³): ...
+
+Kami hitung perkiraan kebutuhan bahan beserta harganya. Hasilnya perkiraan umum, jadi sebaiknya disisakan cadangan bahan.`,
+      },
+      {
+        id: 'h10',
+        title: 'Follow up setelah kirim harga',
+        cat: 'Tindak lanjut',
+        text: `Halo Kak {nama}, izin menindaklanjuti harga {produk} ({nominal}) yang tadi kami sampaikan 😊
+Apakah ingin dilanjutkan pesanannya, atau ada yang perlu kami sesuaikan?`,
+      },
+    ];
+
+    const MENUS = {
+      raezhy: {
+        key: 'wa-templat-v1',
+        defaults: DEFAULTS_RAEZHY,
+        produkHint: 'Produk/paket',
+        nominalHint: 'Nominal, mis. 150000',
+        sub: 'Template pesan pelanggan RaeZhy Kasir Toko Pro & RaeZhy Antrian Pro. Isi {nama}, {produk}, dan {nominal} otomatis, lalu salin atau buka WhatsApp.',
+      },
+      mhj: {
+        key: 'wa-templat-mhj-v2',
+        defaults: DEFAULTS_MHJ,
+        produkHint: 'Nama barang',
+        nominalHint: 'Harga, mis. 150000',
+        sub: 'Template jawaban saat pelanggan menanyakan harga di MHJ Toko. Isi {nama}, {produk} (nama barang), dan {nominal} (harga) otomatis, lalu salin atau buka WhatsApp.',
+      },
+    };
+
+    const menuOk = k => Object.keys(MENUS).includes(k);
+
+    function loadMenu() {
+      try {
+        const saved = localStorage.getItem('wa-menu-aktif');
+        if (menuOk(saved)) return saved;
+      } catch (e) { /* abaikan */ }
+      return 'raezhy';
+    }
+
+    /* ========== State & helper ========== */
+    const $ = id => document.getElementById(id);
+
+    let menu = loadMenu();
+    let items = loadItems();
+    let activeCat = 'Semua';
+    let editId = null;      // id templat yang sedang diubah (null = templat baru)
+    let deleteId = null;    // id templat yang menunggu konfirmasi hapus
+    let toastTimer;
+
+    function loadItems(m = menu) {
+      try {
+        const raw = localStorage.getItem(MENUS[m].key);
+        if (raw) {
+          const saved = JSON.parse(raw);
+          if (Array.isArray(saved)) return saved;
+        }
+      } catch (e) { /* abaikan, pakai bawaan */ }
+      return MENUS[m].defaults.map(t => ({ ...t }));
+    }
+
+    function persist() {
+      try {
+        localStorage.setItem(MENUS[menu].key, JSON.stringify(items));
+      } catch (e) { /* abaikan jika penyimpanan tidak tersedia */ }
+    }
+
+    const ESCAPES = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+    const esc = s => String(s).replace(/[&<>"']/g, c => ESCAPES[c]);
+
+    // "150000" atau "Rp 150.000" -> "Rp150.000"; teks lain dibiarkan apa adanya
+    function formatRupiah(value) {
+      const v = value.trim();
+      if (!/^(rp\.?\s*)?[\d.,\s]+$/i.test(v)) return v;
+      const digits = v.replace(/\D/g, '');
+      return digits ? 'Rp' + Number(digits).toLocaleString('id-ID') : v;
+    }
+
+    // Ganti {nama}, {produk}, {nominal}; jika kosong pakai nilai bawaan
+    // "Kak {nama}" -> "Kak Budi"; jika nama kosong cukup "Kak" (bukan "Kak Kak")
+    function isiNama(text) {
+      const nama = $('nama').value.trim();
+      const sudahKak = /^kak\b/i.test(nama);
+      return text
+        .replace(/\bKak\s+\{nama\}/gi, () => (!nama ? 'Kak' : sudahKak ? nama : 'Kak ' + nama))
+        .replace(/\{nama\}/gi, () => nama || 'Kak');
+    }
+
+    const fillVars = text => isiNama(text)
+      .replace(/\{produk\}/gi, () => $('produk').value.trim() || '...')
+      .replace(/\{nominal\}/gi, () => formatRupiah($('nominal').value) || 'Rp...');
+
+    function toast(message) {
+      const el = $('toast');
+      el.textContent = message;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (e) { /* lanjut ke cara cadangan */ }
+
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { /* gagal */ }
+      ta.remove();
+      return ok;
+    }
+
+    /* ========== Menu (RaeZhy / MHJ Toko) ========== */
+    function applyMenu() {
+      document.querySelectorAll('.menu-tab').forEach(btn => {
+        const on = btn.dataset.menu === menu;
+        btn.classList.toggle('on', on);
+        btn.setAttribute('aria-selected', String(on));
+      });
+      $('sub').textContent = MENUS[menu].sub;
+      $('produk').placeholder = MENUS[menu].produkHint;
+      $('nominal').placeholder = MENUS[menu].nominalHint;
+    }
+
+    function switchMenu(next) {
+      if (!menuOk(next) || next === menu) return;
+      menu = next;
+      items = loadItems(next);
+      activeCat = 'Semua';
+      deleteId = null;
+      $('q').value = '';
+      try { localStorage.setItem('wa-menu-aktif', next); } catch (e) { /* abaikan */ }
+      applyMenu();
+      render();
+    }
+
+    /* ========== Render ========== */
+    function cardHTML(item) {
+      const msg = fillVars(item.text);
+      const deleteLabel = deleteId === item.id ? 'Yakin hapus?' : 'Hapus';
+      const pinLabel = item.pin ? 'Lepas sematan' : 'Sematkan';
+      const waUrl = 'https://wa.me/?text=' + encodeURIComponent(msg);
+
+      return `
+        <div class="card" data-id="${esc(item.id)}">
+          <div class="head">
+            <button class="star${item.pin ? ' on' : ''}" data-a="pin" title="${pinLabel}" aria-label="${pinLabel}">${item.pin ? '★' : '☆'}</button>
+            <h3>${esc(item.title)}</h3>
+            <span class="tag">${esc(item.cat || '')}</span>
+          </div>
+          <div class="bubble">${esc(msg)}</div>
+          <div class="btns">
+            <button data-a="del" class="danger">${deleteLabel}</button>
+            <button data-a="edit">Ubah</button>
+            <a class="btn" target="_blank" rel="noopener" href="${waUrl}">Buka WA</a>
+            <button data-a="copy" class="pri">Salin</button>
+          </div>
+        </div>`;
+    }
+
+    function render() {
+      const categories = ['Semua', ...new Set(items.map(i => i.cat).filter(Boolean))];
+      if (!categories.includes(activeCat)) activeCat = 'Semua';
+
+      $('chips').innerHTML = categories.map(c =>
+        `<button class="chip${c === activeCat ? ' on' : ''}" data-c="${esc(c)}">${esc(c)}</button>`
+      ).join('');
+
+      $('cats').innerHTML = categories.slice(1).map(c => `<option value="${esc(c)}">`).join('');
+
+      const query = $('q').value.trim().toLowerCase();
+      const visible = items.filter(i =>
+        (activeCat === 'Semua' || i.cat === activeCat) &&
+        (i.title + ' ' + i.text).toLowerCase().includes(query)
+      ).sort((a, b) => !!b.pin - !!a.pin); // yang disematkan tampil di atas
+
+      $('list').innerHTML = visible.length
+        ? visible.map(cardHTML).join('')
+        : '<p class="empty">Tidak ada templat. Ketuk Templat baru untuk menambah.</p>';
+    }
+
+    /* ========== Form tambah / ubah ========== */
+    function openForm(id) {
+      editId = id;
+      const item = items.find(x => x.id === id);
+
+      $('mtitle').textContent = item ? 'Ubah templat' : 'Templat baru';
+      $('f-title').value = item ? item.title : '';
+      $('f-cat').value = item ? item.cat : (activeCat === 'Semua' ? '' : activeCat);
+      $('f-text').value = item ? item.text : '';
+
+      $('modal').classList.add('show');
+      $('f-title').focus();
+    }
+
+    const closeForm = () => $('modal').classList.remove('show');
+
+    function saveForm() {
+      const title = $('f-title').value.trim();
+      const text = $('f-text').value.trim();
+      const cat = $('f-cat').value.trim();
+
+      if (!text) {
+        toast('Isi pesan belum diisi');
+        return;
+      }
+
+      const row = {
+        id: editId || Date.now().toString(36),
+        title: title || 'Tanpa judul',
+        cat,
+        text,
+        pin: Boolean((items.find(x => x.id === editId) || {}).pin),
+      };
+
+      items = editId
+        ? items.map(x => (x.id === editId ? row : x))
+        : [row, ...items];
+
+      persist();
+      closeForm();
+      render();
+      toast('Tersimpan');
+    }
+
+    /* ========== Aksi pada kartu ========== */
+    async function handleCardAction(e) {
+      const btn = e.target.closest('[data-a]');
+      if (!btn) return;
+
+      const id = btn.closest('.card').dataset.id;
+      const item = items.find(x => x.id === id);
+
+      switch (btn.dataset.a) {
+        case 'copy': {
+          const ok = await copyText(fillVars(item.text));
+          toast(ok ? 'Tersalin. Tempel di WhatsApp' : 'Gagal menyalin, tahan teks lalu salin manual');
+          break;
+        }
+
+        case 'pin':
+          item.pin = !item.pin;
+          persist();
+          render();
+          toast(item.pin ? 'Disematkan' : 'Sematan dilepas');
+          break;
+
+        case 'edit':
+          openForm(id);
+          break;
+
+        case 'del':
+          // Ketuk pertama minta konfirmasi, ketuk kedua menghapus.
+          if (deleteId === id) {
+            items = items.filter(x => x.id !== id);
+            deleteId = null;
+            persist();
+            toast('Dihapus');
+          } else {
+            deleteId = id;
+            setTimeout(() => {
+              if (deleteId === id) {
+                deleteId = null;
+                render();
+              }
+            }, 3000);
+          }
+          render();
+          break;
+      }
+    }
+
+    /* ========== Cadangan & pemulihan ========== */
+    function exportBackup() {
+      const blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `Template_WA_${menu}_${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+      toast('Cadangan diunduh');
+    }
+
+    // Gabungkan isi file ke daftar saat ini (id yang sama ditimpa isi file)
+    function importBackup(file) {
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (!Array.isArray(data)) throw new Error('bukan daftar');
+
+          const valid = data
+            .filter(t => t && typeof t.id === 'string' && typeof t.text === 'string')
+            .map(t => ({
+              id: t.id,
+              title: String(t.title || 'Tanpa judul'),
+              cat: String(t.cat || ''),
+              text: t.text,
+              pin: !!t.pin,
+            }));
+          if (!valid.length) throw new Error('kosong');
+
+          const ids = new Set(valid.map(t => t.id));
+          items = [...valid, ...items.filter(x => !ids.has(x.id))];
+          persist();
+          render();
+          toast(`${valid.length} templat dipulihkan`);
+        } catch (e) {
+          toast('File cadangan tidak valid');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Kembalikan templat bawaan yang terhapus/belum ada, tanpa menimpa yang sudah ada
+    function restoreDefaults() {
+      const have = new Set(items.map(t => t.id));
+      const missing = MENUS[menu].defaults.filter(t => !have.has(t.id));
+      if (!missing.length) {
+        toast('Semua templat bawaan sudah ada');
+        return;
+      }
+      items = [...items, ...missing.map(t => ({ ...t }))];
+      persist();
+      render();
+      toast(`${missing.length} templat bawaan dipulihkan`);
+    }
+
+    /* ========== Event ========== */
+    $('chips').onclick = e => {
+      const chip = e.target.closest('[data-c]');
+      if (chip) {
+        activeCat = chip.dataset.c;
+        render();
+      }
+    };
+
+    $('q').oninput = render;
+    $('nama').oninput = render;
+    $('produk').oninput = render;
+    $('nominal').oninput = render;
+    $('add').onclick = () => openForm(null);
+    $('cancel').onclick = closeForm;
+    $('save').onclick = saveForm;
+    $('modal').onclick = e => { if (e.target.id === 'modal') closeForm(); };
+    $('btn-export').onclick = exportBackup;
+    $('btn-import').onclick = () => $('import-file').click();
+    $('btn-restore').onclick = restoreDefaults;
+    $('import-file').onchange = e => {
+      importBackup(e.target.files[0]);
+      e.target.value = '';
+    };
+    $('list').onclick = handleCardAction;
+    $('menus').onclick = e => {
+      const tab = e.target.closest('[data-menu]');
+      if (tab) switchMenu(tab.dataset.menu);
+    };
+
+    /* ========== Pasang aplikasi (PWA) ========== */
+    let deferredInstall = null;
+    const isStandalone = () =>
+      window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+    window.addEventListener('beforeinstallprompt', e => {
+      e.preventDefault();
+      deferredInstall = e;
+      $('btn-install').hidden = false;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredInstall = null;
+      $('btn-install').hidden = true;
+      toast('Aplikasi terpasang');
+    });
+
+    // iOS Safari tidak punya prompt otomatis: tampilkan petunjuk manual
+    if (isIOS && !isStandalone()) $('btn-install').hidden = false;
+
+    $('btn-install').onclick = async () => {
+      if (deferredInstall) {
+        deferredInstall.prompt();
+        await deferredInstall.userChoice;
+        deferredInstall = null;
+        $('btn-install').hidden = true;
+      } else if (isIOS) {
+        toast('Ketuk tombol Bagikan, lalu "Tambah ke Layar Utama"');
+      } else {
+        toast('Buka menu browser, lalu pilih "Instal aplikasi"');
+      }
+    };
+
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => { /* abaikan */ });
+      });
+    }
+
+    applyMenu();
+    render();
+  </script>
+</body>
+</html>
